@@ -4,7 +4,7 @@ choco install zerotier-one googlechrome teamviewer 7zip vlc adobereader spotify 
 
 choco feature enable -y allowGlobalConfirmation
 
-choco install zerotier-one
+choco install zerotier-one -y
 
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
