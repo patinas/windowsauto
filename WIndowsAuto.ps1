@@ -5,7 +5,7 @@ choco install tailscale googlechrome 7zip vlc adobereader winrar googledrive sha
 
 choco feature enable -y allowGlobalConfirmation
 
-tailscale up --authkey tskey-auth-kxhmxL5CNTRL-LYB5qBFrzJXkNSFmh9HmRXQN4GGiKLVRJ --unattended
+tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
 
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
