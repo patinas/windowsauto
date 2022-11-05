@@ -7,3 +7,5 @@ choco feature enable -y allowGlobalConfirmation
 
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+sudo tailscale up --authkey tskey-auth-kxhmxL5CNTRL-LYB5qBFrzJXkNSFmh9HmRXQN4GGiKLVRJ
