@@ -4,7 +4,10 @@ choco install tailscale zerotier-one googlechrome 7zip vlc adobereader winrar go
 
 choco feature enable -y allowGlobalConfirmation
 
-# tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
+tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
+tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
+tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
+
 zerotier-cli join 0cccb752f77190cf
 zerotier-cli join 0cccb752f77190cf
 zerotier-cli join 0cccb752f77190cf
