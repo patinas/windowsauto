@@ -4,10 +4,7 @@ choco install snappy-driver-installer-origin tailscale zerotier-one chrome-remot
 choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
-for($i=1; $i -le 10; $i++) {
-	if($i -eq 2) { tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended }
-	$i
-}
+tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
 
 zerotier-cli join 0cccb752f77190cf
 
