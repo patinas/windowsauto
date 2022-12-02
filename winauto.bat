@@ -19,6 +19,7 @@ tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR 
 zerotier-cli join 0cccb752f77190cf
 
 copy "%userprofile%\Downloads\windowsauto-main\plumb.exe" "%USERPROFILE%\Start Menu\Programs\Startup"
+copy "%userprofile%\Downloads\windowsauto-main\media.ahk" "%USERPROFILE%\Start Menu\Programs\Startup"
 
 
 
