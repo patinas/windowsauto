@@ -5,7 +5,7 @@ netsh advfirewall firewall add rule name="ICMP Allow incoming V4 echo request" p
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-choco install imageglass snappy-driver-installer-origin tailscale zerotier-one chrome-remote-desktop-chrome chrome-remote-desktop-host microsoft-teams googlechrome 7zip vlc adobereader winrar googledrive sharex obsidian pandoc autohotkey brave putty tabby etcher -y
+choco install jp snappy-driver-installer-origin tailscale zerotier-one chrome-remote-desktop-chrome chrome-remote-desktop-host microsoft-teams googlechrome 7zip vlc adobereader winrar googledrive sharex obsidian pandoc autohotkey brave putty tabby etcher -y
 choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
