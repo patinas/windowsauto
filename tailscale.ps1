@@ -5,7 +5,7 @@ netsh advfirewall firewall add rule name="ICMP Allow incoming V4 echo request" p
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-choco install tailscale zerotier-one -y
+choco install tailscale -y
 choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
