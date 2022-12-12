@@ -13,5 +13,7 @@ tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR 
 
 zerotier-cli join 0cccb752f77190cf
 
+Enable-WindowsOptionalFeature -Online -FeatureName "NetFx3"
+
 
 
