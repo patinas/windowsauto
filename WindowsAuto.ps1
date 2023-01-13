@@ -9,7 +9,6 @@ choco install rclone everything vmwarevsphereclient notepadplusplus jp snappy-dr
 choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
-tailscale up --authkey tskey-auth-kmYWEs4CNTRL-E58dqRPnpjitN4wH1JYshiDnogxNZCqR --unattended
 
 zerotier-cli join 0cccb752f77190cf
 
