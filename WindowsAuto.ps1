@@ -5,12 +5,10 @@ netsh advfirewall firewall add rule name="ICMP Allow incoming V4 echo request" p
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-choco install rclone everything vmwarevsphereclient notepadplusplus jp snappy-driver-installer-origin tailscale zerotier-one rufus chrome-remote-desktop-chrome chrome-remote-desktop-host microsoft-teams googlechrome 7zip vlc adobereader winrar googledrive sharex obsidian pandoc autohotkey brave putty tabby etcher -y
+choco install notepadplusplus snappy-driver-installer-origin tailscale rufus chrome-remote-desktop-chrome chrome-remote-desktop-host microsoft-teams googlechrome 7zip vlc adobereader winrar googledrive obsidian pandoc autohotkey brave putty tabby etcher -y
 choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
-
-zerotier-cli join 0cccb752f77190cf
 
 
 
