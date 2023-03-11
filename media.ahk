@@ -1,9 +1,30 @@
+$Home::
+Run, explorer.exe
+Return
 
-PgUp::sendinput {Volume_Up}
-PgDn::sendinput {Volume_Down}
+
+$End::
+Run, "C:\Users\apat0008\OneDrive - Region Hovedstaden\Work\Time Management\Flexskema_2023.xlsx"
+Return
+
+$PgUp::
+Run, chrome.exe
+Return
+
+
+
 !s::WinMinimize, A
-!Q:: ; Windows and Q closes active window
-WinGetTitle, Title, A
-PostMessage, 0x112, 0xF060,,, %Title%
-return
+
+
+!q::
+WinClose, A
+Return
+
+$PgDn::
+IfWinExist ahk_class Chrome_WidgetWin_1
+{
+    WinActivate
+    Send ^w
+}
+Return
 
