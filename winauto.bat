@@ -15,7 +15,7 @@ goto :eof
 ::ENTER YOUR CODE BELOW::   
 
 powershell.exe -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/patinas/windowsauto/main/WindowsAuto.ps1 | iex"
-tailscale up --authkey tskey-kP6XG84CNTRL --run-unattended
+tailscale up --authkey tskey-auth-kP6XG84CNTRL-7aifkyV28JMuVwVX9bG5LMTFegeSUbXP --run-unattended
 ::END OF YOUR CODE::
 
 echo.
