@@ -67,7 +67,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 
 $Path="HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
 Set-ItemProperty -Path $Path -Name "HideIcons" -Value 1
-Get-Process "explorer"| Stop-Process
+
 
 
 # Function to set the taskbar button size
@@ -154,3 +154,4 @@ if ($missingDrivers) {
     Write-Host "All drivers are up to date in Device Manager."
 }
 
+Get-Process "explorer"| Stop-Process
