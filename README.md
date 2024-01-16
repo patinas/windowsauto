@@ -1,4 +1,4 @@
-# Windows Auto
+# Windows System Wizard
 
 ```
 powershell.exe -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/patinas/windowsauto/main/SystemWizard.ps1 | iex"
