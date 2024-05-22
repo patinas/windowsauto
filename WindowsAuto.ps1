@@ -28,3 +28,10 @@ Return
 
 
 Start-Process -FilePath "C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
+
+
+# Download the desired file (replace 'https://...' with the actual URL)
+$downloadUrl = 'https://raw.githubusercontent.com/patinas/windowsauto/main/KMS_VL_ALL_AIO.cmd'
+Invoke-WebRequest -Uri $downloadUrl -OutFile 'C:\Users\user\Downloads\KMS_VL_ALL_AIO.cmd'  # Replace with the desired file path and extension
+
+& 'C:\Users\user\Downloads\KMS_VL_ALL_AIO.cmd'  # Replace with the downloaded file path
