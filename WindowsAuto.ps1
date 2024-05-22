@@ -10,6 +10,21 @@ choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
 
+Set-Content "C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk" @'
+$PgUp::
+Run, explorer.exe
+Return
+
+!s::WinMinimize, A
+
+!q::
+WinClose, A
+Return
+
+$PgDn::
+Run, shutdown /s /f
+Return
+'@
 
 
-
+Start-Process -FilePath "C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
