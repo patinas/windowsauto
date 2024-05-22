@@ -15,6 +15,10 @@ $PgUp::
 Run, explorer.exe
 Return
 
+!w::
+Run, chrome.exe
+Return
+
 !s::WinMinimize, A
 
 !q::
