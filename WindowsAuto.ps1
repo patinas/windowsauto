@@ -26,6 +26,7 @@ Run, shutdown /s /f
 Return
 '@
 
+SDIO_R764.exe
 
 Start-Process -FilePath "C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
 
