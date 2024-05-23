@@ -28,6 +28,17 @@ Return
 $PgDn::
 Run, shutdown /s /f
 Return
+
+; AutoHotkey Script to reload Bluetooth with Alt+'
+; Hotkey to reload Bluetooth (Alt + ')
+!'::
+; Disable Bluetooth
+Run, powershell -Command "Get-Service -Name bthserv | Stop-Service", , Hide
+Sleep, 1000  ; Wait for 1 second
+; Enable Bluetooth
+Run, powershell -Command "Get-Service -Name bthserv | Start-Service", , Hide
+MsgBox, Bluetooth Reloaded
+return
 '@
 
 SDIO_R764.exe
