@@ -5,7 +5,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 # Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
 # Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-choco install googlechrome tailscale parsec googledrive autohotkey sdio vscode --ignore-checksums -y
+choco install googlechrome tailscale parsec googledrive autohotkey sdio vscode winrar --ignore-checksums -y
 choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
