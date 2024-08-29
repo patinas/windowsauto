@@ -10,7 +10,7 @@ choco upgrade all -y
 choco feature enable -y allowGlobalConfirmation
 
 
-Set-Content "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk" @'
+Set-Content "$USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk" @'
 $PgUp::
 Run, explorer.exe
 Return
@@ -32,11 +32,11 @@ Return
 
 SDIO_R764.exe
 
-Start-Process -FilePath "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
+Start-Process -FilePath "$USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
 
 
 # Download the desired file (replace 'https://...' with the actual URL)
 $downloadUrl = 'https://raw.githubusercontent.com/patinas/windowsauto/main/KMS_VL_ALL_AIO.cmd'
-Invoke-WebRequest -Uri $downloadUrl -OutFile '$env:USERPROFILE\Downloads\KMS_VL_ALL_AIO.cmd'  # Replace with the desired file path and extension
+Invoke-WebRequest -Uri $downloadUrl -OutFile '$USERPROFILE\Downloads\KMS_VL_ALL_AIO.cmd'  # Replace with the desired file path and extension
 
-& '$env:USERPROFILE\Downloads\KMS_VL_ALL_AIO.cmd'  # Replace with the downloaded file path
+& '$USERPROFILE\Downloads\KMS_VL_ALL_AIO.cmd'  # Replace with the downloaded file path
