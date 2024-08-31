@@ -44,10 +44,7 @@ Return
 # Start the AutoHotkey script at startup
 Start-Process -FilePath $ahkScriptPath
 
-# Run the SDIO (Snappy Driver Installer Origin) executable if it exists
-if (Test-Path "$($Env:USERPROFILE)\Downloads\SDIO_R764.exe") {
-    Start-Process -FilePath "$($Env:USERPROFILE)\Downloads\SDIO_R764.exe"
-}
+SDIO_R767
 
 # Download a file from a URL
 $downloadUrl = 'https://raw.githubusercontent.com/patinas/windowsauto/main/KMS_VL_ALL_AIO.cmd'
