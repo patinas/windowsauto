@@ -22,7 +22,7 @@ choco feature enable -n allowGlobalConfirmation
 # Create an AutoHotkey script to launch specific programs and actions
 $ahkScriptPath = "$($Env:USERPROFILE)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
 Set-Content -Path $ahkScriptPath -Value @'
-$PgUp::
+!f::
 Run, explorer.exe
 Return
 
@@ -36,7 +36,7 @@ Return
 WinClose, A
 Return
 
-$PgDn::
+!z::
 Run, shutdown /s /f
 Return
 '@
