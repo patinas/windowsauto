@@ -15,7 +15,7 @@ Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' 
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
 # Install necessary software with Chocolatey
-choco install googlechrome tailscale parsec googledrive autohotkey sdio vscode winrar --ignore-checksums -y
+choco install googlechrome tailscale googledrive autohotkey winrar --ignore-checksums -y
 choco upgrade all -y
 choco feature enable -n allowGlobalConfirmation
 
@@ -44,7 +44,6 @@ Return
 # Start the AutoHotkey script at startup
 Start-Process -FilePath $ahkScriptPath
 
-SDIO_R767
 
 # Download a file from a URL
 $downloadUrl = 'https://raw.githubusercontent.com/patinas/windowsauto/main/KMS_VL_ALL_AIO.cmd'
