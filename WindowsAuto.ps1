@@ -39,6 +39,10 @@ Return
 !z::
 Run, shutdown /s /f
 Return
+
+!o:: ; Alt + o
+Send, {PrintScreen}
+return
 '@
 
 # Start the AutoHotkey script at startup
