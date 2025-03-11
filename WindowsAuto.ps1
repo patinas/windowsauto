@@ -15,7 +15,7 @@ Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' 
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
 # Install necessary software with Chocolatey
-choco install googlechrome tailscale googledrive autohotkey winrar --ignore-checksums -y
+choco install googlechrome tailscale googledrive autohotkey winrar cursoride --ignore-checksums -y
 choco upgrade all -y
 choco feature enable -n allowGlobalConfirmation
 
