@@ -2,51 +2,436 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
 # Update the security protocol to use TLS 1.2
+# This is often needed for tools like Chocolatey to connect securely.
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 
-# Install Chocolatey
-iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+#---------------------------------------------------------------------
+## Install and Configure Core Tools
+#---------------------------------------------------------------------
 
-# Allow ICMP echo requests (ping)
+# Install Chocolatey Package Manager
+Write-Host "Installing Chocolatey..." -ForegroundColor Yellow
+if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+    iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+} else {
+    Write-Host "Chocolatey is already installed." -ForegroundColor Green
+}
+choco feature enable -n allowGlobalConfirmation
+
+# Install necessary software with Chocolatey
+# NOTE: --ignore-checksums can be a security risk. Use only if you trust the packages.
+Write-Host "Installing software with Chocolatey..." -ForegroundColor Yellow
+choco install googlechrome tailscale googledrive autohotkey winrar --ignore-checksums -y
+choco upgrade all -y
+
+#---------------------------------------------------------------------
+## System Configuration
+#---------------------------------------------------------------------
+
+# Allow ICMP echo requests (ping) through the firewall
+Write-Host "Configuring firewall for ICMP (ping)..." -ForegroundColor Yellow
 netsh advfirewall firewall add rule name="ICMP Allow incoming V4 echo request" protocol=icmpv4:8,any dir=in action=allow
 
-# Enable Remote Desktop
+# Enable Remote Desktop and open firewall ports
+Write-Host "Enabling Remote Desktop..." -ForegroundColor Yellow
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-# Install necessary software with Chocolatey
-choco install googlechrome tailscale googledrive autohotkey winrar cursoride --ignore-checksums -y
-choco upgrade all -y
-choco feature enable -n allowGlobalConfirmation
+#---------------------------------------------------------------------
+## Install and Configure Tiling Window Manager (GlazeWM)
+#---------------------------------------------------------------------
 
-# Create an AutoHotkey script to launch specific programs and actions
-$ahkScriptPath = "$($Env:USERPROFILE)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
-Set-Content -Path $ahkScriptPath -Value @'
-!f::
-Run, explorer.exe
-Return
+# Install GlazeWM using winget (silently)
+Write-Host "Installing GlazeWM..." -ForegroundColor Yellow
+winget install --id GlazeWM -e --silent --accept-package-agreements --accept-source-agreements
 
-!w::
-Run, chrome.exe
-Return
+# Add GlazeWM to run at startup
+Write-Host "Adding GlazeWM to startup..." -ForegroundColor Yellow
+# This is the recommended way to make GlazeWM start with Windows
+glazewm.exe --startup install
 
-!s::WinMinimize, A
+# Create the GlazeWM configuration file
+Write-Host "Creating GlazeWM config file..." -ForegroundColor Yellow
+$glazeConfigPath = "$($Env:USERPROFILE)\.glzr\glazewm"
+# Ensure the directory exists before creating the file
+New-Item -Path (Split-Path $glazeConfigPath) -ItemType Directory -Force | Out-Null
+Set-Content -Path $glazeConfigPath -Value @'
+general:
+  # Commands to run when the WM has started. This is useful for running a
+  # script or launching another application.
+  # Example: The below command launches Zebar.
+  startup_commands: ['shell-exec zebar']
 
-!q::
-WinClose, A
-Return
+  # Commands to run just before the WM is shutdown.
+  # Example: The below command kills Zebar.
+  shutdown_commands: ['shell-exec taskkill /IM zebar.exe /F']
 
-!z::
-Run, shutdown /s /f
-Return
+  # Commands to run after the WM config is reloaded.
+  config_reload_commands: []
 
-!o:: ; Alt + o
-Send, {PrintScreen}
-return
+  # Whether to automatically focus windows underneath the cursor.
+  focus_follows_cursor: false
+
+  # Whether to switch back and forth between the previously focused
+  # workspace when focusing the current workspace.
+  toggle_workspace_on_refocus: false
+
+  cursor_jump:
+    # Whether to automatically move the cursor on the specified trigger.
+    enabled: true
+
+    # Trigger for cursor jump:
+    # - 'monitor_focus': Jump when focus changes between monitors.
+    # - 'window_focus': Jump when focus changes between windows.
+    trigger: 'monitor_focus'
+
+  # How windows should be hidden when switching workspaces.
+  # - 'cloak': Recommended. Hides windows with no animation.
+  # - 'hide': Legacy method (v3.5 and earlier) that has a brief animation,
+  # but has stability issues with some apps.
+  hide_method: 'cloak'
+
+  # Affects which windows get shown in the native Windows taskbar. Has no
+  # effect if `hide_method: 'hide'`.
+  # - 'true': Show all windows (regardless of workspace).
+  # - 'false': Only show windows from the currently shown workspaces.
+  show_all_in_taskbar: false
+
+gaps:
+  # Whether to scale the gaps with the DPI of the monitor.
+  scale_with_dpi: true
+
+  # Gap between adjacent windows.
+  inner_gap: '20px'
+
+  # Gap between windows and the screen edge.
+  outer_gap:
+    top: '60px'
+    right: '20px'
+    bottom: '0px'
+    left: '20px'
+
+window_effects:
+  # Visual effects to apply to the focused window.
+  focused_window:
+    # Highlight the window with a colored border.
+    # ** Exclusive to Windows 11 due to API limitations.
+    border:
+      enabled: true
+      color: '#8dbcff'
+
+    # Remove the title bar from the window's frame. Note that this can
+    # cause rendering issues for some applications.
+    hide_title_bar:
+      enabled: false
+
+    # Change the corner style of the window's frame.
+    # ** Exclusive to Windows 11 due to API limitations.
+    corner_style:
+      enabled: false
+      # Allowed values: 'square', 'rounded', 'small_rounded'.
+      style: 'square'
+
+    # Change the transparency of the window.
+    transparency:
+      enabled: false
+      # Can be something like '95%' or '0.95' for slightly transparent windows.
+      # '0' or '0%' is fully transparent (and, by consequence, unfocusable).
+      opacity: '95%'
+
+  # Visual effects to apply to non-focused windows.
+  other_windows:
+    border:
+      enabled: true
+      color: '#a1a1a1'
+    hide_title_bar:
+      enabled: false
+    corner_style:
+      enabled: false
+      style: 'square'
+    transparency:
+      enabled: false
+      opacity: '0%'
+
+window_behavior:
+  # New windows are created in this state whenever possible.
+  # Allowed values: 'tiling', 'floating'.
+  initial_state: 'tiling'
+
+  # Sets the default options for when a new window is created. This also
+  # changes the defaults for when the state change commands, like
+  # `set-floating`, are used without any flags.
+  state_defaults:
+    floating:
+      # Whether to center floating windows by default.
+      centered: true
+
+      # Whether to show floating windows as always on top.
+      shown_on_top: false
+
+    fullscreen:
+      # Maximize the window if possible. If the window doesn't have a
+      # maximize button, then it'll be fullscreen'ed normally instead.
+      maximized: false
+
+      # Whether to show fullscreen windows as always on top.
+      shown_on_top: false
+
+workspaces:
+  - name: '1'
+  - name: '2'
+  - name: '3'
+  - name: '4'
+  - name: '5'
+  - name: '6'
+  - name: '7'
+  - name: '8'
+  - name: '9'
+
+window_rules:
+  - commands: ['ignore']
+    match:
+      # Ignores any Zebar windows.
+      - window_process: { equals: 'zebar' }
+
+      # Ignores picture-in-picture windows for browsers.
+      - window_title: { regex: '[Pp]icture.in.[Pp]icture' }
+        window_class: { regex: 'Chrome_WidgetWin_1|MozillaDialogClass' }
+
+      # Ignore rules for various 3rd-party apps.
+      - window_process: { equals: 'PowerToys' }
+        window_class: { regex: 'HwndWrapper\[PowerToys\.PowerAccent.*?\]' }
+      - window_process: { equals: 'PowerToys' }
+        window_title: { regex: '.*? - Peek' }
+      - window_process: { equals: 'Lively' }
+        window_class: { regex: 'HwndWrapper' }
+      - window_process: { equals: 'EXCEL' }
+        window_class: { not_regex: 'XLMAIN' }
+      - window_process: { equals: 'WINWORD' }
+        window_class: { not_regex: 'OpusApp' }
+      - window_process: { equals: 'POWERPNT' }
+        window_class: { not_regex: 'PPTFrameClass' }
+
+binding_modes:
+  # When enabled, the focused window can be resized via arrow keys or HJKL.
+  - name: 'resize'
+    keybindings:
+      - commands: ['resize --width -2%']
+        bindings: ['h', 'left']
+      - commands: ['resize --width +2%']
+        bindings: ['l', 'right']
+      - commands: ['resize --height +2%']
+        bindings: ['k', 'up']
+      - commands: ['resize --height -2%']
+        bindings: ['j', 'down']
+      # Press enter/escape to return to default keybindings.
+      - commands: ['wm-disable-binding-mode --name resize']
+        bindings: ['escape', 'enter']
+
+keybindings:
+  # Shift focus in a given direction.
+  - commands: ['focus --direction left']
+    bindings: ['alt+h', 'alt+left']
+  - commands: ['focus --direction right']
+    bindings: ['alt+l', 'alt+right']
+  - commands: ['focus --direction up']
+    bindings: ['alt+k', 'alt+up']
+  - commands: ['focus --direction down']
+    bindings: ['alt+j', 'alt+down']
+
+  # Move focused window in a given direction.
+  - commands: ['move --direction left']
+    bindings: ['alt+shift+h', 'alt+shift+left']
+  - commands: ['move --direction right']
+    bindings: ['alt+shift+l', 'alt+shift+right']
+  - commands: ['move --direction up']
+    bindings: ['alt+shift+k', 'alt+shift+up']
+  - commands: ['move --direction down']
+    bindings: ['alt+shift+j', 'alt+shift+down']
+
+  # Resize focused window by a percentage or pixel amount.
+  - commands: ['resize --width -2%']
+    bindings: ['alt+u']
+  - commands: ['resize --width +2%']
+    bindings: ['alt+p']
+  #- commands: ['resize --height +2%']
+  #  bindings: ['alt+o']
+  #- commands: ['resize --height -2%']
+    # bindings: ['alt+i']
+
+  # As an alternative to the resize keybindings above, resize mode enables
+  # resizing via arrow keys or HJKL. The binding mode is defined above with
+  # the name 'resize'.
+  - commands: ['wm-enable-binding-mode --name resize']
+    bindings: ['alt+r']
+
+  # Disables window management and all other keybindings until alt+shift+p
+  # is pressed again.
+  - commands: ['wm-toggle-pause']
+    bindings: ['alt+shift+p']
+
+  # Change tiling direction. This determines where new tiling windows will
+  # be inserted.
+  - commands: ['toggle-tiling-direction']
+    bindings: ['alt+v']
+
+  # Change focus from tiling windows -> floating -> fullscreen.
+  - commands: ['wm-cycle-focus']
+    bindings: ['alt+space']
+
+  # Change the focused window to be floating.
+  - commands: ['toggle-floating --centered']
+    bindings: ['alt+shift+space']
+
+  # Change the focused window to be tiling.
+  - commands: ['toggle-tiling']
+    bindings: ['alt+t']
+
+  # Change the focused window to be fullscreen.
+  #- commands: ['toggle-fullscreen']
+  # bindings: ['alt+f']
+
+  # Minimize focused window.
+  - commands: ['toggle-minimized']
+    bindings: ['alt+m']
+
+  # Close focused window.
+  - commands: ['close']
+    bindings: ['alt+shift+q']
+
+  # Kill GlazeWM process safely.
+  - commands: ['wm-exit']
+    bindings: ['alt+shift+e']
+
+  # Re-evaluate configuration file.
+  - commands: ['wm-reload-config']
+    bindings: ['alt+shift+r']
+
+  # Redraw all windows.
+  - commands: ['wm-redraw']
+    bindings: ['alt+shift+w']
+
+  # Launch CMD terminal. Alternatively, use `shell-exec wt` or
+  # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
+  # Terminal and Git Bash respectively.
+  - commands: ['shell-exec cmd']
+    bindings: ['alt+enter']
+
+  # Focus the next/previous active workspace defined in `workspaces` config.
+  # - commands: ['focus --next-active-workspace']
+  #  bindings: ['alt+s']
+  #- commands: ['focus --prev-active-workspace']
+  #  bindings: ['alt+a']
+
+  # Focus the workspace that last had focus.
+  - commands: ['focus --recent-workspace']
+    bindings: ['alt+d']
+
+  # Change focus to a workspace defined in `workspaces` config.
+  - commands: ['focus --workspace 1']
+    bindings: ['alt+1']
+  - commands: ['focus --workspace 2']
+    bindings: ['alt+2']
+  - commands: ['focus --workspace 3']
+    bindings: ['alt+3']
+  - commands: ['focus --workspace 4']
+    bindings: ['alt+4']
+  - commands: ['focus --workspace 5']
+    bindings: ['alt+5']
+  - commands: ['focus --workspace 6']
+    bindings: ['alt+6']
+  - commands: ['focus --workspace 7']
+    bindings: ['alt+7']
+  - commands: ['focus --workspace 8']
+    bindings: ['alt+8']
+  - commands: ['focus --workspace 9']
+    bindings: ['alt+9']
+
+  # Move the focused window's parent workspace to a monitor in a given
+  # direction.
+  - commands: ['move-workspace --direction left']
+    bindings: ['alt+shift+a']
+  - commands: ['move-workspace --direction right']
+    bindings: ['alt+shift+f']
+  - commands: ['move-workspace --direction up']
+    bindings: ['alt+shift+d']
+  - commands: ['move-workspace --direction down']
+    bindings: ['alt+shift+s']
+
+  # Move focused window to a workspace defined in `workspaces` config.
+  - commands: ['move --workspace 1', 'focus --workspace 1']
+    bindings: ['alt+shift+1']
+  - commands: ['move --workspace 2', 'focus --workspace 2']
+    bindings: ['alt+shift+2']
+  - commands: ['move --workspace 3', 'focus --workspace 3']
+    bindings: ['alt+shift+3']
+  - commands: ['move --workspace 4', 'focus --workspace 4']
+    bindings: ['alt+shift+4']
+  - commands: ['move --workspace 5', 'focus --workspace 5']
+    bindings: ['alt+shift+5']
+  - commands: ['move --workspace 6', 'focus --workspace 6']
+    bindings: ['alt+shift+6']
+  - commands: ['move --workspace 7', 'focus --workspace 7']
+    bindings: ['alt+shift+7']
+  - commands: ['move --workspace 8', 'focus --workspace 8']
+    bindings: ['alt+shift+8']
+  - commands: ['move --workspace 9', 'focus --workspace 9']
+    bindings: ['alt+shift+9']
 '@
 
-# Start the AutoHotkey script at startup
+#---------------------------------------------------------------------
+## Install PowerToys and Custom Hotkeys
+#---------------------------------------------------------------------
+
+# Install Microsoft PowerToys using winget (silently)
+Write-Host "Installing Microsoft PowerToys..." -ForegroundColor Yellow
+winget install --id Microsoft.PowerToys -e --scope machine --silent --accept-package-agreements --accept-source-agreements
+
+# Create an AutoHotkey script for custom shortcuts and place it in the startup folder
+Write-Host "Creating AutoHotkey startup script..." -ForegroundColor Yellow
+$ahkScriptPath = "$($Env:USERPROFILE)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\media.ahk"
+Set-Content -Path $ahkScriptPath -Value @'
+; --- App Launchers ---
+!f::Run, explorer.exe
+!w::Run, chrome.exe
+!Enter::Run, wt.exe
+
+; --- Window Management ---
+!s::WinMinimize, A  ; Minimize active window
+!q::WinClose, A     ; Close active window
+
+; --- System Actions ---
+!z::Run, shutdown /s /f /t 0 ; Shutdown immediately
+!o::Send, {PrintScreen}      ; Take a screenshot
+
+; --- Taskbar Toggle ---
+; Press Win+T to show/hide the taskbar.
+#t::
+{
+    global taskbarIsHidden
+    if (taskbarIsHidden)
+    {
+        WinShow, ahk_class Shell_TrayWnd ; If hidden, show it
+        taskbarIsHidden := false ; Update the state
+    }
+    else
+    {
+        WinHide, ahk_class Shell_TrayWnd ; If shown, hide it
+        taskbarIsHidden := true ; Update the state
+    }
+    return
+}
+
+; Hide the taskbar when the script first launches
+WinHide, ahk_class Shell_TrayWnd
+global taskbarIsHidden := true
+'@
+
+# Start the AutoHotkey script immediately
+Write-Host "Starting AutoHotkey script..." -ForegroundColor Yellow
 Start-Process -FilePath $ahkScriptPath
+
+Write-Host "Setup complete! ✅" -ForegroundColor Green
 
 
 # Download a file from a URL
